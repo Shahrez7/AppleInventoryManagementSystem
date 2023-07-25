@@ -34,13 +34,13 @@ public class App{
                     inv.setItemName(rs.getString("item_name"));
                     inv.setItemQuantity(rs.getInt("item_quantity"));
 
-                    // Create and populate ItemCategory
+
                     ItemCategory itemCategory = new ItemCategory();
                     itemCategory.setId(rs.getInt("item_category_id"));
                     itemCategory.setCategoryName(rs.getString("category_name"));
                     inv.setItemCategory(itemCategory);
 
-                    // Create and populate ItemLocation
+
                     ItemLocation itemLocation = new ItemLocation();
                     itemLocation.setId(rs.getInt("item_location_id"));
                     itemLocation.setLocationName(rs.getString("location_name"));
@@ -83,7 +83,7 @@ public class App{
     public static List<Inventory> FetchAll() {
         List<Inventory> inventoryList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id ORDER BY inventory.id")) {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -115,7 +115,7 @@ public class App{
     public static List<Inventory> FetchAllByCategory(int categoryId) {
         List<Inventory> inventoryList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_category_id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_category_id = ? ORDER BY inventory.id")) {
 
             stmt.setInt(1, categoryId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -125,13 +125,13 @@ public class App{
                     inv.setItemName(rs.getString("item_name"));
                     inv.setItemQuantity(rs.getInt("item_quantity"));
 
-                    // Create and populate ItemCategory
+
                     ItemCategory itemCategory = new ItemCategory();
                     itemCategory.setId(rs.getInt("item_category_id"));
                     itemCategory.setCategoryName(rs.getString("category_name"));
                     inv.setItemCategory(itemCategory);
 
-                    // Create and populate ItemLocation
+
                     ItemLocation itemLocation = new ItemLocation();
                     itemLocation.setId(rs.getInt("item_location_id"));
                     itemLocation.setLocationName(rs.getString("location_name"));
@@ -148,7 +148,7 @@ public class App{
     public static List<Inventory> FetchAllByLocation(int locationId) {
         List<Inventory> inventoryList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ? ORDER BY inventory.id")) {
 
             stmt.setInt(1, locationId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -158,13 +158,13 @@ public class App{
                     inv.setItemName(rs.getString("item_name"));
                     inv.setItemQuantity(rs.getInt("item_quantity"));
 
-                    // Create and populate ItemCategory
+
                     ItemCategory itemCategory = new ItemCategory();
                     itemCategory.setId(rs.getInt("item_category_id"));
                     itemCategory.setCategoryName(rs.getString("category_name"));
                     inv.setItemCategory(itemCategory);
 
-                    // Create and populate ItemLocation
+
                     ItemLocation itemLocation = new ItemLocation();
                     itemLocation.setId(rs.getInt("item_location_id"));
                     itemLocation.setLocationName(rs.getString("location_name"));
@@ -181,7 +181,7 @@ public class App{
     public static List<Inventory> FetchAllByLocationAndCategory(int locationId, int categoryId) {
         List<Inventory> inventoryList = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ? AND inventory.item_category_id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ? AND inventory.item_category_id = ? ORDER BY inventory.id")) {
 
             stmt.setInt(1, locationId);
             stmt.setInt(2, categoryId);
@@ -192,13 +192,13 @@ public class App{
                     inv.setItemName(rs.getString("item_name"));
                     inv.setItemQuantity(rs.getInt("item_quantity"));
 
-                    // Create and populate ItemCategory
+
                     ItemCategory itemCategory = new ItemCategory();
                     itemCategory.setId(rs.getInt("item_category_id"));
                     itemCategory.setCategoryName(rs.getString("category_name"));
                     inv.setItemCategory(itemCategory);
 
-                    // Create and populate ItemLocation
+
                     ItemLocation itemLocation = new ItemLocation();
                     itemLocation.setId(rs.getInt("item_location_id"));
                     itemLocation.setLocationName(rs.getString("location_name"));
@@ -212,40 +212,10 @@ public class App{
         }
         return inventoryList;
     }
-    public static Inventory AddNewInventory(String jsonPayload) {
-        System.out.println("Received JSON Payload: " + jsonPayload);
-        Gson gson = new Gson();
-        Inventory newInventory = gson.fromJson(jsonPayload, Inventory.class);
-        try {
 
-            try (Connection conn = dataSource.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement("INSERT INTO inventory (item_name, item_quantity, item_category_id, item_location_id) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, newInventory.getItemName());
-                stmt.setInt(2, newInventory.getItemQuantity());
-                stmt.setInt(3, newInventory.getItemCategory().getId());
-                stmt.setInt(4, newInventory.getItemLocation().getId());
-
-                int rowsInserted = stmt.executeUpdate();
-                if (rowsInserted > 0) {
-                    // Retrieve the generated auto-incremented ID for the newly added inventory item
-                    try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                        if (generatedKeys.next()) {
-                            int newInventoryId = generatedKeys.getInt(1);
-                            newInventory.setId(newInventoryId);
-                            return newInventory;
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
     public static boolean deleteInventoryItemById(int InvId) {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM inventory WHERE id = ?")) {
-
             stmt.setInt(1, InvId);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -254,5 +224,42 @@ public class App{
         }
         return false;
     }
+    public static Inventory addInventoryItem(Inventory newItem) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("INSERT INTO inventory (id, item_name, item_quantity, item_category_id, item_location_id) VALUES (?, ?, ?, ?, ?)")) {
 
+            stmt.setInt(1, newItem.getId()); // Set the provided ID
+            stmt.setString(2, newItem.getItemName());
+            stmt.setInt(3, newItem.getItemQuantity());
+            stmt.setInt(4, newItem.getItemCategory().getId());
+            stmt.setInt(5, newItem.getItemLocation().getId());
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return newItem;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static Inventory updateInventoryItem(Inventory updatedItem) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("UPDATE inventory SET item_name = ?, item_quantity = ?, item_category_id = ?, item_location_id = ? WHERE id = ?")) {
+
+            stmt.setString(1, updatedItem.getItemName());
+            stmt.setInt(2, updatedItem.getItemQuantity());
+            stmt.setInt(3, updatedItem.getItemCategory().getId());
+            stmt.setInt(4, updatedItem.getItemLocation().getId());
+            stmt.setInt(5, updatedItem.getId());
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return updatedItem;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+

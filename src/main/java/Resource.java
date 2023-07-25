@@ -2,8 +2,6 @@ import com.google.gson.Gson;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-
 @Path("/path")
 public class Resource {
     @GET
@@ -72,23 +70,6 @@ public class Resource {
         }
         return null;
     }
-    @POST
-    @Path("/add")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addInventoryItem(Inventory newInventory) {
-        try {
-            Inventory createdInventory = App.AddNewInventory(String.valueOf(newInventory));
-            if (createdInventory != null) {
-                return Response.status(Response.Status.OK).entity(new Gson().toJson(createdInventory)).build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"Failed to add new inventory item.\"}").build();
-            }
-        } catch (Exception exc) {
-            exc.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"An error occurred.\"}").build();
-        }
-    }
     @DELETE
     @Path("/id/{InvId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -105,5 +86,38 @@ public class Resource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"An error occurred.\"}").build();
         }
     }
+    @POST
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addInventoryItem(String payload) {
+        Gson gson = new Gson();
+        Inventory newItem = gson.fromJson(payload, Inventory.class);
 
+        Inventory addedItem = App.addInventoryItem(newItem);
+
+        if (addedItem != null) {
+            // Build the JSON response for the added item
+            String responseJson = gson.toJson(addedItem);
+            return Response.status(Response.Status.OK).entity(responseJson).build();
+        } else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"Failed to add inventory item.\"}").build();
+        }
+    }
+    @PUT
+    @Path("/{inventory_id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateInventoryItem(@PathParam("inventory_id") int inventoryId, String payload) {
+        Gson gson = new Gson();
+        Inventory updatedItem = gson.fromJson(payload, Inventory.class);
+        updatedItem.setId(inventoryId);
+        Inventory result = App.updateInventoryItem(updatedItem);
+        if (result != null) {
+            String responseJson = gson.toJson(result);
+            return Response.status(Response.Status.OK).entity(responseJson).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Inventory item not found.\"}").build();
+        }
+    }
 }
