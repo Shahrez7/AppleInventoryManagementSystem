@@ -2,13 +2,13 @@ public class Inventory {
     private int id;
     private String itemName;
     private int itemQuantity;
-    private int itemCategory;
-    private int itemLocation;
+    private ItemCategory itemCategory;
+    private ItemLocation itemLocation;
 
     public Inventory() {
     }
 
-    public Inventory(int id, String itemName, int itemQuantity, int itemCategory, int itemLocation) {
+    public Inventory(int id, String itemName, int itemQuantity, ItemCategory itemCategory, ItemLocation itemLocation) {
         this.id = id;
         this.itemName = itemName;
         this.itemQuantity = itemQuantity;
@@ -40,19 +40,19 @@ public class Inventory {
         this.itemQuantity = itemQuantity;
     }
 
-    public int getItemCategory() {
+    public ItemCategory getItemCategory() {
         return itemCategory;
     }
 
-    public void setItemCategory(int itemCategory) {
+    public void setItemCategory(ItemCategory itemCategory) {
         this.itemCategory = itemCategory;
     }
 
-    public int getItemLocation() {
+    public ItemLocation getItemLocation() {
         return itemLocation;
     }
 
-    public void setItemLocation(int itemLocation) {
+    public void setItemLocation(ItemLocation itemLocation) {
         this.itemLocation = itemLocation;
     }
 }

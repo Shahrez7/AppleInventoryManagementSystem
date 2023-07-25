@@ -61,4 +61,49 @@ public class Resource {
         }
         return null;
     }
+    @GET
+    @Path("/location/{locationId}/category/{categoryId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String FetchAllByLocationAndCategory(@PathParam("locationId") int locationId, @PathParam("categoryId") int categoryId) {
+        try {
+            return new Gson().toJson(App.FetchAllByLocationAndCategory(locationId, categoryId));
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+        return null;
+    }
+    @POST
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addInventoryItem(Inventory newInventory) {
+        try {
+            Inventory createdInventory = App.AddNewInventory(String.valueOf(newInventory));
+            if (createdInventory != null) {
+                return Response.status(Response.Status.OK).entity(new Gson().toJson(createdInventory)).build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("{\"error\":\"Failed to add new inventory item.\"}").build();
+            }
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"An error occurred.\"}").build();
+        }
+    }
+    @DELETE
+    @Path("/id/{InvId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteInventoryItem(@PathParam("InvId") int InvId) {
+        try {
+            boolean isDeleted = App.deleteInventoryItemById(InvId);
+            if (isDeleted) {
+                return Response.status(Response.Status.OK).entity("{\"message\":\"Inventory item deleted successfully.\"}").build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Inventory item not found.\"}").build();
+            }
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"An error occurred.\"}").build();
+        }
+    }
+
 }
