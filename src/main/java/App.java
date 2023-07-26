@@ -92,13 +92,13 @@ public class App{
                     inv.setItemName(rs.getString("item_name"));
                     inv.setItemQuantity(rs.getInt("item_quantity"));
 
-                    // Create and populate ItemCategory
+
                     ItemCategory itemCategory = new ItemCategory();
                     itemCategory.setId(rs.getInt("item_category_id"));
                     itemCategory.setCategoryName(rs.getString("category_name"));
                     inv.setItemCategory(itemCategory);
 
-                    // Create and populate ItemLocation
+
                     ItemLocation itemLocation = new ItemLocation();
                     itemLocation.setId(rs.getInt("item_location_id"));
                     itemLocation.setLocationName(rs.getString("location_name"));

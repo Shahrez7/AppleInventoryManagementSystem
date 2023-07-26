@@ -1,16 +1,26 @@
 import com.google.gson.Gson;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+
 @Path("/path")
 public class Resource {
+    private static final Logger LOGGER = LogManager.getLogger(Resource.class);
+
+
     @GET
     @Path("/id/{InvId}")
     @Produces(MediaType.APPLICATION_JSON)
     public String Fetchid(@PathParam("InvId") int InvId) {
-        try {
+        try {LOGGER.info("GET Request Received: Fetch by ID: "+InvId);
             return new Gson().toJson(App.FetchByID(InvId));
         } catch (Exception exc) {
+            LOGGER.error("Error Occurred!");
             exc.printStackTrace();
         }
         return null;
@@ -19,9 +29,10 @@ public class Resource {
     @Produces(MediaType.APPLICATION_JSON)
     public String getPList() {
         try {
+            LOGGER.info("GET Request Received: Get All Inventory Items List");
             return new Gson().toJson(App.getPhone());
         } catch (Exception exc) {
-
+            LOGGER.error("Error Occurred!");
             exc.printStackTrace();
         }
         return null;
@@ -31,8 +42,10 @@ public class Resource {
     @Produces(MediaType.APPLICATION_JSON)
     public String FetchAllInventory() {
         try {
+            LOGGER.info("GET Request Received: Get All Inventory Items");
             return new Gson().toJson(App.FetchAll());
         } catch (Exception exc) {
+            LOGGER.error("Error Occurred!");
             exc.printStackTrace();
         }
         return null;
@@ -97,7 +110,7 @@ public class Resource {
         Inventory addedItem = App.addInventoryItem(newItem);
 
         if (addedItem != null) {
-            // Build the JSON response for the added item
+
             String responseJson = gson.toJson(addedItem);
             return Response.status(Response.Status.OK).entity(responseJson).build();
         } else {
@@ -120,4 +133,5 @@ public class Resource {
             return Response.status(Response.Status.NOT_FOUND).entity("{\"error\":\"Inventory item not found.\"}").build();
         }
     }
+
 }
