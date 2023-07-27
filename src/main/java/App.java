@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class App{
-    private static HikariDataSource dataSource;
+    static HikariDataSource dataSource;
 
     static {
         HikariConfig config = new HikariConfig();

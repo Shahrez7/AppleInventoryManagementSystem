@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response;
 @Path("/path")
 public class Resource {
     private static final Logger LOGGER = LogManager.getLogger(Resource.class);
+    private App app;
 
 
     @GET
@@ -145,4 +146,8 @@ public class Resource {
         }
     }
 
+
+    public void setApp(App appMock) {
+        this.app=appMock;
+    }
 }

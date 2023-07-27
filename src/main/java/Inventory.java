@@ -55,4 +55,14 @@ public class Inventory {
     public void setItemLocation(ItemLocation itemLocation) {
         this.itemLocation = itemLocation;
     }
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "id=" + id +
+                ", itemName='" + itemName + '\'' +
+                ", itemQuantity=" + itemQuantity +
+                ", itemCategory=" + itemCategory.toString() +
+                ", itemLocation=" + itemLocation.toString() +
+                '}';
+    }
 }

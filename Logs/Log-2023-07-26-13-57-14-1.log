@@ -1,0 +1,7 @@
+2023-07-26 13:57:24.170 [http-nio-8080-exec-9] INFO  Resource - GET Request Received: Get All Inventory Items List
+2023-07-26 13:57:32.834 [http-nio-8080-exec-10] INFO  Resource - GET Request Received: Get All Inventory Items
+2023-07-26 13:57:51.639 [http-nio-8080-exec-1] INFO  Resource - GET Request Received: Fetch by ID: 1
+2023-07-26 13:58:02.365 [http-nio-8080-exec-2] INFO  Resource - GET Request Received: Fetch AlL by Location: 7
+2023-07-26 13:58:14.822 [http-nio-8080-exec-3] INFO  Resource - GET Request Received: Fetch AlL by Category: 22
+2023-07-26 13:58:53.512 [http-nio-8080-exec-6] INFO  Resource - Post Request Received: Item Added
+2023-07-26 13:59:11.389 [http-nio-8080-exec-8] INFO  Resource - GET Request Received: Get All Inventory Items

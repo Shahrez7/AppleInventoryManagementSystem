@@ -25,5 +25,12 @@ public class ItemLocation {
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
+    @Override
+    public String toString() {
+        return "ItemLocation{" +
+                "id=" + id +
+                ", locationName='" + locationName + '\'' +
+                '}';
+    }
 }
 
