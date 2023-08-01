@@ -1,0 +1,3 @@
+2023-07-31 10:59:49.873 [http-nio-8080-exec-9] INFO  resource.InvResource - GET Request Received: Get All Inventory Items List
+2023-07-31 10:59:56.351 [http-nio-8080-exec-10] INFO  resource.InvResource - GET Request Received: Get All Inventory Items
+2023-07-31 11:00:28.992 [http-nio-8080-exec-1] INFO  resource.InvResource - Delete Request Received: Delete Inventory Item ID : 2

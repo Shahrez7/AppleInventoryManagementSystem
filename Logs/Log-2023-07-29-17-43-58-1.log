@@ -1,0 +1,2 @@
+2023-07-29 17:44:00.470 [http-nio-8080-exec-1] INFO  resource.InvResource - GET Request Received: Get All domain.Inventory Items
+2023-07-29 17:44:38.763 [http-nio-8080-exec-4] INFO  resource.InvResource - Post Request Received: Item Added

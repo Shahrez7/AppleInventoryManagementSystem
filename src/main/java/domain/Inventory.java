@@ -1,3 +1,5 @@
+package domain;
+
 public class Inventory {
     private int id;
     private String itemName;
@@ -57,7 +59,7 @@ public class Inventory {
     }
     @Override
     public String toString() {
-        return "Inventory{" +
+        return "domain.Inventory{" +
                 "id=" + id +
                 ", itemName='" + itemName + '\'' +
                 ", itemQuantity=" + itemQuantity +

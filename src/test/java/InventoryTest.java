@@ -1,3 +1,6 @@
+import domain.Inventory;
+import domain.ItemCategory;
+import domain.ItemLocation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,7 +11,6 @@ public class InventoryTest {
 
     @BeforeEach
     void setUp() {
-        // Create an instance of Inventory
         inventory = new Inventory();
     }
 
@@ -40,7 +42,7 @@ public class InventoryTest {
 
     @Test
     void testToString() {
-        // Set up Inventory object
+
         inventory.setId(1);
         inventory.setItemName("Item A");
         inventory.setItemQuantity(10);
@@ -55,7 +57,7 @@ public class InventoryTest {
         location.setLocationName("Location Y");
         inventory.setItemLocation(location);
 
-        String expectedToString = "Inventory{id=1, itemName='Item A', itemQuantity=10, itemCategory=ItemCategory{id=101, categoryName='Category X'}, itemLocation=ItemLocation{id=201, locationName='Location Y'}}";
+        String expectedToString = "domain.Inventory{id=1, itemName='Item A', itemQuantity=10, itemCategory=domain.ItemCategory{id=101, categoryName='Category X'}, itemLocation=domain.ItemLocation{id=201, locationName='Location Y'}}";
         assertEquals(expectedToString, inventory.toString());
     }
 

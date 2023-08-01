@@ -1,1 +1,1 @@
-2023-07-26 14:44:49.549 [http-nio-8080-exec-9] INFO  Resource - GET Request Received: Fetch by ID: 1
+2023-07-26 14:44:49.549 [http-nio-8080-exec-9] INFO  resource.InvResource - GET Request Received: Fetch by ID: 1

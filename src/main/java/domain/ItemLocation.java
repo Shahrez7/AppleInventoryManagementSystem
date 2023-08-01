@@ -1,3 +1,5 @@
+package domain;
+
 public class ItemLocation {
     private int id;
     private String locationName;
@@ -27,7 +29,7 @@ public class ItemLocation {
     }
     @Override
     public String toString() {
-        return "ItemLocation{" +
+        return "domain.ItemLocation{" +
                 "id=" + id +
                 ", locationName='" + locationName + '\'' +
                 '}';

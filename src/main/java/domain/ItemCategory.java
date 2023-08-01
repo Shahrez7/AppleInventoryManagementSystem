@@ -1,3 +1,5 @@
+package domain;
+
 public class ItemCategory {
     private int id;
     private String categoryName;
@@ -27,7 +29,7 @@ public class ItemCategory {
     }
     @Override
     public String toString() {
-        return "ItemCategory{" +
+        return "domain.ItemCategory{" +
                 "id=" + id +
                 ", categoryName='" + categoryName + '\'' +
                 '}';

@@ -1,30 +1,31 @@
-import com.google.gson.Gson;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+package services;
+
+import domain.Inventory;
+import domain.ItemCategory;
+import domain.ItemLocation;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class App{
-    static HikariDataSource dataSource;
+public class InvService {
+    private Connection connection;
 
-    static {
-        HikariConfig config = new HikariConfig();
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/aim");
-        config.setUsername("root");
-        config.setPassword("Shahrez7");
-
-        dataSource = new HikariDataSource(config);
+    public InvService() throws ClassNotFoundException {
+        this.connection = DBConnection.getConnection();
     }
-    public static Inventory FetchByID(int InvId) {
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    public InvService(Connection connection) {
+        this.connection = connection;
+    }
+
+    public Inventory FetchByID(int InvId) throws SQLException {
         Inventory inv = null;
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.id = ?")) {
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_INVENTORY_BY_ID_QUERY);
 
             stmt.setInt(1, InvId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -48,42 +49,35 @@ public class App{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
         return inv;
     }
-    public static List<String> getPhone(){
+    public List<String> getPhone() throws SQLException {
 
-        String USER = "root";
-        String PASSWORD = "Shahrez7";
-
-        String URL = "jdbc:mysql://localhost:3306/aim";
         List<String> listOfPhone = new ArrayList<>();
 
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(URL,USER,PASSWORD);
-            Statement stmt = conn.createStatement();
-            ResultSet rs;
+            PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_ALL_PHONE_NAMES_QUERY);
 
-            rs = stmt.executeQuery("SELECT * FROM inventory");
-            while ( rs.next() ) {
-                String Name = rs.getString("item_name");
-                listOfPhone.add(Name);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String Name = rs.getString("item_name");
+                    listOfPhone.add(Name);
+                }
+                connection.close();
             }
-            conn.close();
-
         }
         catch (Exception e){
-            e.printStackTrace();
+            throw e;
         }
 
         return listOfPhone;
     }
-    public static List<Inventory> FetchAll() {
+    public List<Inventory> FetchAll() throws SQLException {
         List<Inventory> inventoryList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id ORDER BY inventory.id")) {
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_ALL_INVENTORY_QUERY);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -108,15 +102,14 @@ public class App{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
         return inventoryList;
     }
-    public static List<Inventory> FetchAllByCategory(int categoryId) {
+    public List<Inventory> FetchAllByCategory(int categoryId) throws SQLException {
         List<Inventory> inventoryList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_category_id = ? ORDER BY inventory.id")) {
-
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_INVENTORY_BY_CATEGORY_QUERY);
             stmt.setInt(1, categoryId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -141,15 +134,14 @@ public class App{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
         return inventoryList;
     }
-    public static List<Inventory> FetchAllByLocation(int locationId) {
+    public List<Inventory> FetchAllByLocation(int locationId) throws SQLException {
         List<Inventory> inventoryList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ? ORDER BY inventory.id")) {
-
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_INVENTORY_BY_LOCATION_QUERY);
             stmt.setInt(1, locationId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -174,15 +166,14 @@ public class App{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
         return inventoryList;
     }
-    public static List<Inventory> FetchAllByLocationAndCategory(int locationId, int categoryId) {
+    public  List<Inventory> FetchAllByLocationAndCategory(int locationId, int categoryId) throws SQLException {
         List<Inventory> inventoryList = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM inventory INNER JOIN item_category ON inventory.item_category_id = item_category.id INNER JOIN item_location ON inventory.item_location_id = item_location.id WHERE inventory.item_location_id = ? AND inventory.item_category_id = ? ORDER BY inventory.id")) {
-
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.SELECT_INVENTORY_BY_LOCATION_AND_CATEGORY_QUERY);
             stmt.setInt(1, locationId);
             stmt.setInt(2, categoryId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -208,43 +199,40 @@ public class App{
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
         return inventoryList;
     }
 
-    public static boolean deleteInventoryItemById(int InvId) {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM inventory WHERE id = ?")) {
+    public void deleteInventoryItemById(int InvId) throws SQLException {
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.DELETE_INVENTORY_ITEM_BY_ID_QUERY);
             stmt.setInt(1, InvId);
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-    public static Inventory addInventoryItem(Inventory newItem) {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("INSERT INTO inventory (id, item_name, item_quantity, item_category_id, item_location_id) VALUES (?, ?, ?, ?, ?)")) {
+            stmt.executeUpdate();
 
+        } catch (SQLException e) {
+           throw e;
+        }
+
+    }
+    public  void addInventoryItem(Inventory newItem) throws SQLException {
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.ADD_INVENTORY_ITEM_QUERY);
             stmt.setInt(1, newItem.getId()); // Set the provided ID
             stmt.setString(2, newItem.getItemName());
             stmt.setInt(3, newItem.getItemQuantity());
             stmt.setInt(4, newItem.getItemCategory().getId());
             stmt.setInt(5, newItem.getItemLocation().getId());
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return newItem;
-            }
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
-        return null;
+
     }
-    public static Inventory updateInventoryItem(Inventory updatedItem) {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("UPDATE inventory SET item_name = ?, item_quantity = ?, item_category_id = ?, item_location_id = ? WHERE id = ?")) {
+    public  void updateInventoryItem(Inventory updatedItem) throws SQLException {
+        try {
+             PreparedStatement stmt = connection.prepareStatement(QueryManager.UPDATE_INVENTORY_ITEM_QUERY);
 
             stmt.setString(1, updatedItem.getItemName());
             stmt.setInt(2, updatedItem.getItemQuantity());
@@ -252,14 +240,11 @@ public class App{
             stmt.setInt(4, updatedItem.getItemLocation().getId());
             stmt.setInt(5, updatedItem.getId());
 
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return updatedItem;
-            }
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         }
-        return null;
+
     }
 }
-

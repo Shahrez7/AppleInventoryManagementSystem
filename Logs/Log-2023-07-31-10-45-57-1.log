@@ -1,0 +1,7 @@
+2023-07-31 10:46:00.213 [main] INFO  resource.InvResource - GET Request Received: Fetch AlL by Location: 1
+2023-07-31 10:46:00.903 [main] INFO  resource.InvResource - GET Request Received: Fetch by ID: 1
+2023-07-31 10:46:01.058 [main] INFO  resource.InvResource - Delete Request Received: Delete Inventory Item ID : 1
+2023-07-31 10:46:01.166 [main] INFO  resource.InvResource - Put Request Received: Update Inventory Item ID : 1
+2023-07-31 10:46:01.292 [main] INFO  resource.InvResource - GET Request Received: Fetch AlL by Location: 1 and Category: 1
+2023-07-31 10:46:01.408 [main] INFO  resource.InvResource - GET Request Received: Fetch AlL by Category: 1
+2023-07-31 10:46:01.512 [main] INFO  resource.InvResource - GET Request Received: Get All Inventory Items
